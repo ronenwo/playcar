@@ -2,9 +2,10 @@ import processing.video.*;
 
 Movie myMovie;
 
-PGraphics pg;
+PGraphics pg, gameLayer;
 PImage  imgLast;
 boolean mouseClicked = false;
+boolean gameLayerOn= false;
 
 void setup() {
 
@@ -14,7 +15,9 @@ void setup() {
   myMovie.loop();
   imgLast = createImage(myMovie.width,myMovie.height,RGB);
   frameRate(30);
+  gameLayer = createGraphics(width, height);
   pg = createGraphics(200, 500);  
+  
 }
 
 
@@ -31,6 +34,9 @@ void draw() {
   if (mouseClicked){
     image(pg,mouseX,mouseY);
   }
+  if (gameLayerOn){
+    image(gameLayer,0,0);
+  }
 }
 
 
@@ -45,10 +51,7 @@ void mousePressed() {
    imgLast.copy(myMovie,mouseX-100,mouseY-100,200,500,0,0,200,500); // Before we read the new frame, we always save the previous frame for comparison!
    imgLast.updatePixels();
    pg.beginDraw();
-    pg.background(255,0);
-//  pg.noFill();
-//  pg.stroke(255);
-//  pg.ellipse(mouseX-120, mouseY-60, 60, 60);
+   pg.background(255,0);
    pg.image(imgLast,0,0); 
    pg.endDraw();
    image(pg,mouseX,mouseY);
@@ -61,7 +64,13 @@ void mouseDragged(){
 }  
 
 void mouseReleased() {
-     mouseClicked = false;
+   mouseClicked = false;
+   PImage img = loadImage("elec_pole1.png");
+   gameLayer.beginDraw();
+//   gameLayer.background(255,0);
+   gameLayer.image(img,mouseX,mouseY); 
+   gameLayer.endDraw();
+   gameLayerOn = true;  
    myMovie.play();
 }
 
